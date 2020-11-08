@@ -11,7 +11,7 @@ class Player {
   public async play(): Promise<void> {
     const tmpFolder = path.resolve(__dirname, '..', 'tmp', this.name);
 
-    await execSync(`play -v 0.1 ${tmpFolder}`);
+    await execSync(`play -v 0.3 ${tmpFolder}`);
   }
 }
 

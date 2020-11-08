@@ -1,6 +1,5 @@
 import { Client, ChatUserstate } from 'tmi.js';
-import Player from './Player';
-import speak from './Speaker';
+import SpeakerCommandReader from './Speaker/SpeakerCommandReader';
 
 class CommandReader {
   constructor(
@@ -10,29 +9,33 @@ class CommandReader {
   ) {}
 
   async execute(message: string): Promise<void> {
-    const messageTrim = message.trim();
-    const commandName = messageTrim.substr(0, messageTrim.indexOf(' ')).trim();
-    const text = messageTrim.substr(messageTrim.indexOf(' ')).trim();
+    const [commandName, text] = this.getCommandAndText(message);
 
     console.log(`commandName = ${commandName}`);
     console.log(`text = ${text}`);
 
-    if (commandName === '!dice') {
-      this.client.say(this.target, `You rolled a ${3}`);
-      console.log(
-        `* Executed ${commandName} command by ${this.context.username}`,
-      );
-    } else if (commandName === '!speak') {
-      await speak(text, 'pt-BR');
-      const player = new Player('speak.mp3');
-      await player.play();
+    const speakerCommandReader = new SpeakerCommandReader(
+      text,
+      commandName,
+      this.context.username,
+    );
+    speakerCommandReader.execute();
 
-      console.log(
-        `* Executed ${commandName} command by ${this.context.username}`,
-      );
-    } else {
-      console.log(`* Unknown command ${commandName}`);
+    console.log(
+      `* Executed ${commandName} command by ${this.context.username}`,
+    );
+  }
+
+  private getCommandAndText(message: string): Array<string> {
+    const messageTrim = message.trim();
+    if (messageTrim.indexOf(' ') === -1) {
+      return [messageTrim];
     }
+
+    const commandName = messageTrim.substr(0, messageTrim.indexOf(' ')).trim();
+    const text = messageTrim.substr(messageTrim.indexOf(' ')).trim();
+
+    return [commandName, text];
   }
 }
 
