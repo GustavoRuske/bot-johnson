@@ -9,9 +9,15 @@ class Player {
   }
 
   public async play(): Promise<void> {
+    const isWin = process.platform === 'win32';
+
     const tmpFolder = path.resolve(__dirname, '..', 'tmp', this.name);
 
-    await execSync(`play -v 0.3 ${tmpFolder}`);
+    if (isWin) {
+      await execSync(`start ${tmpFolder}`);
+    } else {
+      await execSync(`play -v 0.6 ${tmpFolder}`);
+    }
   }
 }
 

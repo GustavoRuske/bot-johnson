@@ -25,9 +25,12 @@ async function onMessageHandler(
     return;
   } // Ignore messages from the bot
 
-  const commandReader = new CommandReader(target, context, client);
+  const isCommand = msg.trim().startsWith('!');
+  if (!isCommand) {
+    return;
+  }
 
-  commandReader.execute(msg);
+  new CommandReader(target, context, client).execute(msg);
 }
 
 // Called every time the bot connects to Twitch chat

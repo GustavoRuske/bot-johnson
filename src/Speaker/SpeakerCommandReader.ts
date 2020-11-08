@@ -15,6 +15,12 @@ export default class SpeakerCommandReader {
       )}`,
     );
 
+    const existsCommand = speakerLanguageCode.getLanguageCode(this.commandName);
+
+    if (!existsCommand) {
+      return;
+    }
+
     await speak(`${this.user} disse.`, 'pt-BR');
 
     await speak(
